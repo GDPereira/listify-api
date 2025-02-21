@@ -1,5 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PasetoService } from 'src/paseto/paseto.service';
+import { User } from 'src/schemas/user.schema';
 import { UsersService } from 'src/users/users.service';
 
 @Injectable()
@@ -28,15 +29,26 @@ export class AuthService {
     return {
       success: true,
       data: {
-        token: await this.pasetoService.createToken({
-          userId: user.id,
-          email: user.email,
-        }),
+        token: await this.getToken({ _id: user._id, email: user.email }),
       },
     };
   }
 
   async signUp(user: { email: string; password: string; name: string }) {
-    return await this.userService.create(user);
+    const { _id, email } = await this.userService.create(user);
+
+    return {
+      success: true,
+      data: {
+        token: await this.getToken({ _id, email }),
+      },
+    };
+  }
+
+  private getToken({ email, _id }: Pick<User, 'email' | '_id'>) {
+    return this.pasetoService.createToken({
+      userId: _id,
+      email,
+    });
   }
 }

@@ -16,7 +16,7 @@ export class UsersService {
     return await this.userModel.find().select(['-password']);
   }
 
-  async create(user: User) {
+  async create(user: Omit<User, '_id'>) {
     const existingUser = await this.findByEmail(user.email);
 
     if (existingUser) {
@@ -25,9 +25,9 @@ export class UsersService {
 
     user.password = await this.hashPassword(user.password);
 
-    await this.userModel.insertOne(user);
+    const createdUser = await this.userModel.insertOne(user);
 
-    return { success: true };
+    return createdUser;
   }
 
   isMatchPassword(password: string, hash: string) {

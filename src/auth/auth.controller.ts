@@ -13,6 +13,8 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 
+const MAX_AGE_COOKIES = 1000 * 60 * 60 * 24;
+
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -31,7 +33,7 @@ export class AuthController {
     res.cookie('paseto', token, {
       httpOnly: true,
       secure: true,
-      maxAge: 1000 * 60 * 60 * 24, // 24 hours
+      maxAge: MAX_AGE_COOKIES,
       sameSite: 'strict',
       path: '/',
     });
@@ -41,8 +43,24 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('register')
-  singUp(@Body() { name, email, password }: RegisterDto) {
-    return this.authService.signUp({ name, email, password });
+  async singUp(
+    @Body() { name, email, password }: RegisterDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const {
+      success,
+      data: { token },
+    } = await this.authService.signUp({ name, email, password });
+
+    res.cookie('paseto', token, {
+      httpOnly: true,
+      secure: true,
+      maxAge: MAX_AGE_COOKIES,
+      sameSite: 'strict',
+      path: '/',
+    });
+
+    return { success };
   }
 
   @HttpCode(HttpStatus.OK)
