@@ -25,8 +25,6 @@ export class PasetoService {
   }
 
   async verifyToken(token: string) {
-    const valid = await V4.verify(token, this.publicKey);
-    console.log('valid :>> ', valid);
-    return valid;
+    return await V4.verify(token, this.publicKey);
   }
 }

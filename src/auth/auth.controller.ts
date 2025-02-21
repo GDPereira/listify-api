@@ -5,8 +5,10 @@ import {
   HttpStatus,
   Post,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { PasetoGuard } from 'src/paseto/paseto.guard';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -44,6 +46,7 @@ export class AuthController {
   }
 
   @HttpCode(HttpStatus.OK)
+  @UseGuards(PasetoGuard)
   @Post('logout')
   signOut(@Res({ passthrough: true }) res: Response) {
     res.clearCookie('paseto');
