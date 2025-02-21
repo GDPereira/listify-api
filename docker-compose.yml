@@ -1,0 +1,12 @@
+services:
+  db:
+    image: mongo
+    restart: always
+    ports:
+      - '${MONGO_PORT}:27017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: listify
+    volumes:
+      - ./data:/data/db
