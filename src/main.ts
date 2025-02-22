@@ -13,6 +13,10 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.use(cookieParser());
 
+  const origin = [/localhost:\d+/];
+
+  app.enableCors({ origin, credentials: true });
+
   await app.listen(port);
 }
 bootstrap();
