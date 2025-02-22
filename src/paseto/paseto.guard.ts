@@ -1,4 +1,9 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PasetoService } from './paseto.service';
 
 @Injectable()
@@ -10,7 +15,7 @@ export class PasetoGuard implements CanActivate {
     const token = request.cookies?.paseto;
 
     if (!token) {
-      return false;
+      throw new UnauthorizedException('Invalid token');
     }
 
     try {
@@ -18,8 +23,8 @@ export class PasetoGuard implements CanActivate {
       request.user = payload;
       return true;
     } catch (err) {
-      console.log('err :>> ', err);
-      return false;
+      console.error('err :>> ', err);
+      throw new UnauthorizedException('Invalid token');
     }
   }
 }
