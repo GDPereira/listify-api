@@ -5,10 +5,11 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Request,
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Request as RequestExpress, Response } from 'express';
 import { PasetoGuard } from 'src/paseto/paseto.guard';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
@@ -43,7 +44,7 @@ export class AuthController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Post('register')
+  @Post('signup')
   async singUp(
     @Body() { name, email, password }: RegisterDto,
     @Res({ passthrough: true }) res: Response,
@@ -76,7 +77,12 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(PasetoGuard)
   @Get('check')
-  check() {
-    return { success: true };
+  check(@Request() req: RequestExpress) {
+    return {
+      success: true,
+      data: {
+        user: req.user,
+      },
+    };
   }
 }
