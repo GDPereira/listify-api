@@ -29,26 +29,29 @@ export class AuthService {
     return {
       success: true,
       data: {
-        token: await this.getToken({ _id: user._id, email: user.email }),
+        token: await this.getToken({
+          _id: user._id,
+          name: user.name,
+        }),
       },
     };
   }
 
   async signUp(user: { email: string; password: string; name: string }) {
-    const { _id, email } = await this.userService.create(user);
+    const { _id, name } = await this.userService.create(user);
 
     return {
       success: true,
       data: {
-        token: await this.getToken({ _id, email }),
+        token: await this.getToken({ _id, name }),
       },
     };
   }
 
-  private getToken({ email, _id }: Pick<User, 'email' | '_id'>) {
+  private getToken({ _id, name }: Pick<User, '_id' | 'name'>) {
     return this.pasetoService.createToken({
       userId: _id,
-      email,
+      name,
     });
   }
 }
