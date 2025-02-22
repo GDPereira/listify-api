@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -69,6 +70,13 @@ export class AuthController {
   signOut(@Res({ passthrough: true }) res: Response) {
     res.clearCookie('paseto');
 
+    return { success: true };
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(PasetoGuard)
+  @Get('check')
+  check() {
     return { success: true };
   }
 }
