@@ -4,11 +4,11 @@ import {
   HttpCode,
   HttpStatus,
   UseGuards,
-} from '@nestjs/common';
-import { PasetoGuard } from 'src/paseto/paseto.guard';
-import { UsersService } from './users.service';
+} from "@nestjs/common";
+import { PasetoGuard } from "src/paseto/paseto.guard";
+import { UsersService } from "./users.service";
 
-@Controller('users')
+@Controller("users")
 export class UsersController {
   constructor(private usersService: UsersService) {}
 

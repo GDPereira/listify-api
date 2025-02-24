@@ -8,21 +8,21 @@ import {
   Request,
   Res,
   UseGuards,
-} from '@nestjs/common';
-import { Request as RequestExpress, Response } from 'express';
-import { PasetoGuard } from 'src/paseto/paseto.guard';
-import { AuthService } from './auth.service';
-import { LoginDto } from './dto/login.dto';
-import { RegisterDto } from './dto/register.dto';
+} from "@nestjs/common";
+import { Request as RequestExpress, Response } from "express";
+import { PasetoGuard } from "src/paseto/paseto.guard";
+import { AuthService } from "./auth.service";
+import { LoginDto } from "./dto/login.dto";
+import { RegisterDto } from "./dto/register.dto";
 
 const MAX_AGE_COOKIES = 1000 * 60 * 60 * 24;
 
-@Controller('auth')
+@Controller("auth")
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @HttpCode(HttpStatus.OK)
-  @Post('login')
+  @Post("login")
   async signIn(
     @Body() { email, password }: LoginDto,
     @Res({ passthrough: true }) res: Response,
@@ -32,19 +32,19 @@ export class AuthController {
       data: { token },
     } = await this.authService.singIn({ email, password });
 
-    res.cookie('paseto', token, {
+    res.cookie("paseto", token, {
       httpOnly: true,
       secure: true,
       maxAge: MAX_AGE_COOKIES,
-      sameSite: 'strict',
-      path: '/',
+      sameSite: "strict",
+      path: "/",
     });
 
     return { success };
   }
 
   @HttpCode(HttpStatus.OK)
-  @Post('signup')
+  @Post("signup")
   async singUp(
     @Body() { name, email, password }: RegisterDto,
     @Res({ passthrough: true }) res: Response,
@@ -54,12 +54,12 @@ export class AuthController {
       data: { token },
     } = await this.authService.signUp({ name, email, password });
 
-    res.cookie('paseto', token, {
+    res.cookie("paseto", token, {
       httpOnly: true,
       secure: true,
       maxAge: MAX_AGE_COOKIES,
-      sameSite: 'strict',
-      path: '/',
+      sameSite: "strict",
+      path: "/",
     });
 
     return { success };
@@ -67,16 +67,16 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @UseGuards(PasetoGuard)
-  @Post('logout')
+  @Post("logout")
   signOut(@Res({ passthrough: true }) res: Response) {
-    res.clearCookie('paseto');
+    res.clearCookie("paseto");
 
     return { success: true };
   }
 
   @HttpCode(HttpStatus.OK)
   @UseGuards(PasetoGuard)
-  @Get('check')
+  @Get("check")
   check(@Request() req: RequestExpress) {
     return {
       success: true,

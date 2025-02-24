@@ -1,7 +1,7 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { PasetoService } from 'src/paseto/paseto.service';
-import { User } from 'src/schemas/user.schema';
-import { UsersService } from 'src/users/users.service';
+import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { PasetoService } from "src/paseto/paseto.service";
+import { User } from "src/schemas/user.schema";
+import { UsersService } from "src/users/users.service";
 
 @Injectable()
 export class AuthService {
@@ -14,7 +14,7 @@ export class AuthService {
     const user = await this.userService.findByEmail(email);
 
     if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException("Invalid credentials");
     }
 
     const isValid = await this.userService.isMatchPassword(
@@ -23,7 +23,7 @@ export class AuthService {
     );
 
     if (!isValid) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException("Invalid credentials");
     }
 
     return {
@@ -48,7 +48,7 @@ export class AuthService {
     };
   }
 
-  private getToken({ _id, name }: Pick<User, '_id' | 'name'>) {
+  private getToken({ _id, name }: Pick<User, "_id" | "name">) {
     return this.pasetoService.createToken({
       userId: _id,
       name,

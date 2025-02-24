@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { createPrivateKey, createPublicKey, KeyObject } from 'crypto';
-import { V4 } from 'paseto';
+import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { createPrivateKey, createPublicKey, KeyObject } from "crypto";
+import { V4 } from "paseto";
 
 @Injectable()
 export class PasetoService {
@@ -10,17 +10,17 @@ export class PasetoService {
 
   constructor(private readonly configService: ConfigService) {
     this.privateKey = createPrivateKey(
-      this.configService.get('PASETO_PRIVATE_KEY'),
+      this.configService.get("PASETO_PRIVATE_KEY"),
     );
 
     this.publicKey = createPublicKey(
-      this.configService.get('PASETO_PUBLIC_KEY'),
+      this.configService.get("PASETO_PUBLIC_KEY"),
     );
   }
 
   async createToken(payload: Record<PropertyKey, unknown>, expiresIn?: string) {
     return V4.sign(payload, this.privateKey, {
-      expiresIn: expiresIn ?? '24h',
+      expiresIn: expiresIn ?? "24h",
     });
   }
 
