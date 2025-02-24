@@ -9,7 +9,7 @@ export class UsersService {
   constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
 
   async findByEmail(email: string) {
-    return await this.userModel.findOne({ email });
+    return await this.userModel.findOne({ email: email.toLowerCase() });
   }
 
   async findAll() {
@@ -17,7 +17,8 @@ export class UsersService {
   }
 
   async create(user: Omit<User, '_id'>) {
-    const existingUser = await this.findByEmail(user.email);
+    const email = user.email.toLowerCase();
+    const existingUser = await this.findByEmail(email);
 
     if (existingUser) {
       throw new BadRequestException('User already exists');
@@ -25,7 +26,7 @@ export class UsersService {
 
     user.password = await this.hashPassword(user.password);
 
-    const createdUser = await this.userModel.insertOne(user);
+    const createdUser = await this.userModel.insertOne({ ...user, email });
 
     return createdUser;
   }
