@@ -7,6 +7,7 @@ import { AuthModule } from "./auth/auth.module";
 import { UsersModule } from "./users/users.module";
 import { PasetoService } from "./paseto/paseto.service";
 import { PasetoModule } from "./paseto/paseto.module";
+import { ProductsModule } from './products/products.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { PasetoModule } from "./paseto/paseto.module";
     AuthModule,
     UsersModule,
     PasetoModule,
+    ProductsModule,
   ],
   controllers: [AppController],
   providers: [AppService, PasetoService],
